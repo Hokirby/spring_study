@@ -7,7 +7,8 @@ import com.naver.shopping.member.MemberServiceImpl;
 import com.naver.shopping.order.Order;
 import com.naver.shopping.order.OrderService;
 import com.naver.shopping.order.OrderServiceImpl;
-
+/*
+//Test 폴더 쓰기 전에 테스트함
 public class OrderApp {
     public static void main(String[] args) {
         MemberService memberService = new MemberServiceImpl();
@@ -19,3 +20,6 @@ public class OrderApp {
         System.out.println("order= " + order);
     }
 }
+*/
+
+
