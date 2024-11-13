@@ -7,11 +7,19 @@ import com.naver.shopping.member.MemberService;
 import com.naver.shopping.member.MemberServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class OrderServiceTest {
+    /*
+    //스프링 사용으로 사용 안하는 코드
     AppConfig appConfig = new AppConfig();
     MemberService memberService = appConfig.memberService();
     OrderService orderService = appConfig.orderService();
+    */
+    ApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+    MemberService memberService = ac.getBean("memberService", MemberService.class);
+    OrderService orderService = ac.getBean("orderService", OrderService.class);
 
     /*
     //첫번째 사용

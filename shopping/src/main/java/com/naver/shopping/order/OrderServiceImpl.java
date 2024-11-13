@@ -5,12 +5,15 @@ import com.naver.shopping.member.Member;
 import com.naver.shopping.member.MemberRepository;
 import com.naver.shopping.member.MemoryMemberRepository;
 import com.naver.shopping.discount.DiscountPolicy;
+import jakarta.annotation.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class OrderServiceImpl implements OrderService {
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+    @Autowired
+    public OrderServiceImpl( MemberRepository memberRepository, DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }
@@ -20,5 +23,9 @@ public class OrderServiceImpl implements OrderService {
         Member member = memberRepository.findByID(memberId);
         int discountPrice = discountPolicy.discount(member, itemPrice);
         return new Order(memberId,itemName, itemPrice, discountPrice);
+    }
+
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
     }
 }
