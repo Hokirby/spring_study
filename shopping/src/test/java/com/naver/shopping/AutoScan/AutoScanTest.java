@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 public class AutoScanTest {
 
     AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AutoAppConfig.class);
@@ -84,5 +86,40 @@ public class AutoScanTest {
         Assertions.assertThat(primaryServiceOrder.getDiscountPrice()).isEqualTo(2000);
         Assertions.assertThat(qualifierServiceOrder.getDiscountPrice()).isEqualTo(1000);
 
+    }
+
+    @Component
+    static class OrderService3{
+        private MemberRepository memberRepository;
+        private Map<String, DiscountPolicy> discountPolicyMap;
+
+        @Autowired
+        public OrderService3(MemberRepository memberRepository, Map<String, DiscountPolicy> discountPolicyMap) {
+            this.memberRepository = memberRepository;
+            this.discountPolicyMap = discountPolicyMap;
+        }
+
+        public  Order createOrder (Long memberId, String itemName, int itemPrice, String policyName) {
+            Member member = memberRepository.findByID(memberId);
+            DiscountPolicy discountPolicy = discountPolicyMap.get(policyName);
+            int discountPrice = discountPolicy.discount(member, itemPrice);
+            return new Order(memberId, itemName, itemPrice, discountPrice);
+        }
+    }
+
+    @Test
+    @DisplayName("choosing belong several discount policies")
+    void getAllDiscountPolicy() {
+        Member testMember = new Member(1L, "tester", Grade.VIP);
+        ac.getBean(MemberService.class).join(testMember);
+
+        Order fixServiceOrder = ac.getBean(OrderService3.class).createOrder(1L,"item1", 20000, "fixDiscountPolicy");
+        Order rateServiceOrder = ac.getBean(OrderService3.class).createOrder(1L,"item1", 20000, "rateDiscountPolicy");
+
+        System.out.println("fixServiceOrder = " + fixServiceOrder);
+        System.out.println("rateServiceOrder = " + rateServiceOrder);
+
+        Assertions.assertThat(fixServiceOrder.getDiscountPrice()).isEqualTo(1000);
+        Assertions.assertThat(rateServiceOrder.getDiscountPrice()).isEqualTo(2000);
     }
 }

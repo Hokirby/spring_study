@@ -1,5 +1,8 @@
 package com.naver.shopping.order;
 
+import lombok.Getter;
+
+@Getter
 public class Order {
     private Long memberId;
     private String itemName;
@@ -27,17 +30,18 @@ public class Order {
                 '}';
     }
 
+    /*
+    //@Getter 사용으로 대체됨
     public Long getMemberId() {
         return memberId;
     }
-
     public String getItemName() {
         return itemName;
     }
-
     public int getItemPrice() {
         return itemPrice;
     }
+    */
 
     public int getDiscountPrice() {
         return discountPrice;
